@@ -21,7 +21,7 @@ export default function PriorityPage() {
   const [activeFilter, setActiveFilter] = useState<NotificationType | "All">("All");
   const [topN, setTopN] = useState(10);
   const { isRead, markAsRead } = useReadState();
-  const { notifications, isLoading, error, refetch } = useNotifications();
+  const { notifications, isLoading, error, refetch, lastUpdated } = useNotifications();
 
   useEffect(() => {
     Log("info", "page", "Priority page loaded");
@@ -42,7 +42,8 @@ export default function PriorityPage() {
       <Box sx={{ mb: 2 }}>
         <Typography variant="h4">Priority Inbox</Typography>
         <Typography variant="body2">
-          Top {topN} notifications ranked by type weight + recency
+          Top {topN} by weight + recency · Auto-refreshes every 30s
+          {lastUpdated && ` · Updated ${lastUpdated.toLocaleTimeString()}`}
         </Typography>
       </Box>
 

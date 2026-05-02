@@ -25,7 +25,7 @@ export default function NotificationsPage() {
   const [activeFilter, setActiveFilter] = useState<NotificationType | "All">("All");
   const [currentPage, setCurrentPage] = useState(1);
   const { isRead, markAsRead, markAllAsRead, getUnreadCount } = useReadState();
-  const { notifications, isLoading, error, refetch } = useNotifications();
+  const { notifications, isLoading, error, refetch, lastUpdated } = useNotifications();
 
   useEffect(() => {
     Log("info", "page", "Notifications page loaded");
@@ -56,7 +56,10 @@ export default function NotificationsPage() {
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Box>
           <Typography variant="h4">Notifications</Typography>
-          <Typography variant="body2">All campus updates</Typography>
+          <Typography variant="body2">
+            Auto-refreshes every 30s
+            {lastUpdated && ` · Updated ${lastUpdated.toLocaleTimeString()}`}
+          </Typography>
         </Box>
         {unreadCount > 0 && (
           <Button
