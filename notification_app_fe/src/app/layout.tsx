@@ -8,7 +8,7 @@ import ThemeProvider from "@/theme/ThemeProvider";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "CampusNotify — Campus Notification Platform",
+  title: "BuzzBoard — Campus Notification Platform",
   description:
     "Real-time campus notifications for Placements, Events, and Results. Stay informed with the Priority Inbox.",
 };

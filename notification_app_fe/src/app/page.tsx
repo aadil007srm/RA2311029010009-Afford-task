@@ -17,7 +17,7 @@ export default function HomePage() {
     <Box sx={{ py: 6, maxWidth: 640, mx: "auto" }}>
       <Box sx={{ mb: 5 }}>
         <Box sx={{ width: 48, height: 48, backgroundColor: "#F7DF1E", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", mb: 3 }}>
-          <Typography sx={{ color: "#1A1A1D", fontWeight: 800, fontSize: "1.1rem" }}>CN</Typography>
+          <Typography sx={{ color: "#1A1A1D", fontWeight: 800, fontSize: "1.1rem" }}>BB</Typography>
         </Box>
         <Typography variant="h4" sx={{ mb: 1 }}>Campus Notifications</Typography>
         <Typography sx={{ color: "#8B8B8B", fontSize: "0.95rem", lineHeight: 1.7, maxWidth: 480 }}>

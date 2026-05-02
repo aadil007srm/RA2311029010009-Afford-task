@@ -37,10 +37,10 @@ export default function Navbar() {
 
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
             <Box sx={{ width: 28, height: 28, backgroundColor: "#F7DF1E", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Typography sx={{ color: "#1A1A1D", fontWeight: 800, fontSize: "0.75rem" }}>CN</Typography>
+              <Typography sx={{ color: "#1A1A1D", fontWeight: 800, fontSize: "0.75rem" }}>BB</Typography>
             </Box>
             <Typography sx={{ color: "#E8E6E3", fontWeight: 600, fontSize: "0.95rem" }}>
-              CampusNotify
+              BuzzBoard
             </Typography>
           </Link>
 
@@ -67,7 +67,7 @@ export default function Navbar() {
 
       <Drawer open={open} onClose={() => setOpen(false)} sx={{ "& .MuiDrawer-paper": { width: 220, backgroundColor: "#2C2C2E", borderRight: "1px solid #3A3A3C" } }}>
         <Box sx={{ p: 2 }}>
-          <Typography sx={{ fontWeight: 700, color: "#F7DF1E", mb: 2, fontSize: "0.95rem" }}>CampusNotify</Typography>
+          <Typography sx={{ fontWeight: 700, color: "#F7DF1E", mb: 2, fontSize: "0.95rem" }}>BuzzBoard</Typography>
           <List>
             {navItems.map((item) => (
               <ListItem key={item.href} disablePadding>

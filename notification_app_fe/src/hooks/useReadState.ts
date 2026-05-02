@@ -5,7 +5,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Log } from "@/lib/logger";
 
-const STORAGE_KEY = "campus_notify_read_ids";
+const STORAGE_KEY = "buzzboard_read_ids";
 
 function loadFromStorage(): Set<string> {
   if (typeof window === "undefined") return new Set();
