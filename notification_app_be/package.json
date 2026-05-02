@@ -1,0 +1,19 @@
+{
+  "name": "notification-app-be",
+  "version": "1.0.0",
+  "description": "Stage 1 - Priority Inbox backend for campus notifications",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "logging-middleware": "file:../logging_middleware"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}
