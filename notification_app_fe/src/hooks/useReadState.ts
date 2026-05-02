@@ -1,7 +1,4 @@
-/**
- * Custom hook for managing notification read/unread state.
- * Persists read state in localStorage so it survives page refreshes.
- */
+// Read/unread tracking — stores which notifications have been seen in localStorage
 
 "use client";
 
@@ -10,82 +7,55 @@ import { Log } from "@/lib/logger";
 
 const STORAGE_KEY = "campus_notify_read_ids";
 
-/**
- * Loads read notification IDs from localStorage.
- */
-function loadReadIds(): Set<string> {
+function loadFromStorage(): Set<string> {
   if (typeof window === "undefined") return new Set();
-
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return new Set(JSON.parse(stored));
-    }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
   } catch {
-    /* Silently fall back to empty set if storage is corrupted */
+    return new Set();
   }
-  return new Set();
 }
 
-/**
- * Saves read notification IDs to localStorage.
- */
-function saveReadIds(ids: Set<string>): void {
+function saveToStorage(ids: Set<string>): void {
   if (typeof window === "undefined") return;
-
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
-  } catch {
-    /* Silently fail if localStorage is full */
-  }
+  } catch { /* storage full, ignore */ }
 }
 
-/**
- * Hook for managing read/unread state of notifications.
- *
- * @returns Object with read state utilities
- */
 export function useReadState() {
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
 
-  /* Load from localStorage on mount */
+  // load saved read state on mount
   useEffect(() => {
-    const ids = loadReadIds();
+    const ids = loadFromStorage();
     setReadIds(ids);
-    Log("info", "hook", `Loaded ${ids.size} read notification IDs from storage`);
+    Log("info", "hook", `Loaded ${ids.size} read IDs`);
   }, []);
 
-  /** Check if a notification has been read */
-  const isRead = useCallback(
-    (id: string): boolean => readIds.has(id),
-    [readIds]
-  );
+  const isRead = useCallback((id: string) => readIds.has(id), [readIds]);
 
-  /** Mark a single notification as read */
   const markAsRead = useCallback((id: string) => {
     setReadIds((prev) => {
       const next = new Set(prev);
       next.add(id);
-      saveReadIds(next);
-      Log("info", "hook", `Marked notification ${id.slice(0, 8)}... as read`);
+      saveToStorage(next);
       return next;
     });
   }, []);
 
-  /** Mark all provided IDs as read */
   const markAllAsRead = useCallback((ids: string[]) => {
     setReadIds((prev) => {
       const next = new Set(prev);
       ids.forEach((id) => next.add(id));
-      saveReadIds(next);
-      Log("info", "hook", `Marked ${ids.length} notifications as read`);
+      saveToStorage(next);
       return next;
     });
   }, []);
 
-  /** Count unread notifications from a given list */
   const getUnreadCount = useCallback(
-    (ids: string[]): number => ids.filter((id) => !readIds.has(id)).length,
+    (ids: string[]) => ids.filter((id) => !readIds.has(id)).length,
     [readIds]
   );
 

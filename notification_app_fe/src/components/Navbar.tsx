@@ -1,6 +1,4 @@
-/**
- * Navbar — Clean, minimal top navigation.
- */
+// Navbar — yellow accent nav
 
 "use client";
 
@@ -19,34 +17,29 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 const navItems = [
-  { label: "All Notifications", href: "/notifications" },
-  { label: "Priority Inbox", href: "/priority" },
+  { label: "Notifications", href: "/notifications" },
+  { label: "Priority", href: "/priority" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <>
       <AppBar position="fixed" elevation={0}>
-        <Toolbar sx={{ maxWidth: 900, width: "100%", mx: "auto", px: { xs: 2, md: 3 } }}>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={() => setMobileOpen(true)}
-            sx={{ mr: 1, display: { md: "none" } }}
-            aria-label="menu"
-          >
-            <MenuIcon />
+        <Toolbar sx={{ maxWidth: 800, width: "100%", mx: "auto", px: { xs: 2, md: 3 }, minHeight: "56px !important" }}>
+          <IconButton color="inherit" edge="start" onClick={() => setOpen(true)} sx={{ mr: 1, display: { md: "none" } }}>
+            <MenuIcon sx={{ color: "#F7DF1E" }} />
           </IconButton>
 
-          <Link href="/" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 6 }}>
-            <NotificationsNoneIcon sx={{ color: "#2563EB", fontSize: 22 }} />
-            <Typography variant="h6" sx={{ color: "#1E293B", fontWeight: 700, fontSize: "1rem" }}>
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
+            <Box sx={{ width: 28, height: 28, backgroundColor: "#F7DF1E", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Typography sx={{ color: "#1A1A1D", fontWeight: 800, fontSize: "0.75rem" }}>CN</Typography>
+            </Box>
+            <Typography sx={{ color: "#E8E6E3", fontWeight: 600, fontSize: "0.95rem" }}>
               CampusNotify
             </Typography>
           </Link>
@@ -57,10 +50,11 @@ export default function Navbar() {
                 <Button
                   size="small"
                   sx={{
-                    color: pathname === item.href ? "#2563EB" : "#64748B",
+                    color: pathname === item.href ? "#F7DF1E" : "#8B8B8B",
                     fontWeight: pathname === item.href ? 600 : 400,
                     fontSize: "0.85rem",
-                    "&:hover": { backgroundColor: "#F1F5F9" },
+                    px: 1.5,
+                    "&:hover": { color: "#F7DF1E", backgroundColor: "transparent" },
                   }}
                 >
                   {item.label}
@@ -71,32 +65,19 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
 
-      <Drawer
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          display: { xs: "block", md: "none" },
-          "& .MuiDrawer-paper": { width: 240, backgroundColor: "#FFF" },
-        }}
-      >
+      <Drawer open={open} onClose={() => setOpen(false)} sx={{ "& .MuiDrawer-paper": { width: 220, backgroundColor: "#2C2C2E", borderRight: "1px solid #3A3A3C" } }}>
         <Box sx={{ p: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#1E293B" }}>
-            CampusNotify
-          </Typography>
+          <Typography sx={{ fontWeight: 700, color: "#F7DF1E", mb: 2, fontSize: "0.95rem" }}>CampusNotify</Typography>
           <List>
             {navItems.map((item) => (
               <ListItem key={item.href} disablePadding>
-                <Link href={item.href} style={{ textDecoration: "none", width: "100%" }} onClick={() => setMobileOpen(false)}>
-                  <ListItemButton
-                    sx={{
-                      borderRadius: 2,
-                      mb: 0.5,
-                      backgroundColor: pathname === item.href ? "#EFF6FF" : "transparent",
-                      color: pathname === item.href ? "#2563EB" : "#64748B",
-                    }}
-                  >
-                    <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontSize: "0.875rem" } } }} />
+                <Link href={item.href} style={{ textDecoration: "none", width: "100%" }} onClick={() => setOpen(false)}>
+                  <ListItemButton sx={{
+                    borderRadius: 1.5, mb: 0.5,
+                    backgroundColor: pathname === item.href ? "#F7DF1E15" : "transparent",
+                    color: pathname === item.href ? "#F7DF1E" : "#8B8B8B",
+                  }}>
+                    <ListItemText primary={item.label} />
                   </ListItemButton>
                 </Link>
               </ListItem>
@@ -105,7 +86,7 @@ export default function Navbar() {
         </Box>
       </Drawer>
 
-      <Toolbar />
+      <Toolbar sx={{ minHeight: "56px !important" }} />
     </>
   );
 }

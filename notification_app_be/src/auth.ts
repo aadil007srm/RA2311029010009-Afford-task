@@ -1,25 +1,15 @@
-/**
- * Authentication helper for the Backend Application.
- * Obtains a Bearer token to access protected evaluation server APIs.
- */
+// Gets a bearer token from the evaluation server
+// Caches it until it's about to expire
 
 import { CONFIG, BASE_URL } from "./config";
 
-/** Cached access token */
 let accessToken: string | null = null;
-let tokenExpiry: number = 0;
+let tokenExpiry = 0;
 
-/**
- * Obtains and caches a Bearer token from the evaluation auth endpoint.
- * Automatically refreshes the token when it nears expiry.
- *
- * @returns Bearer access token
- * @throws Error if authentication request fails
- */
 export async function getAuthToken(): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
 
-  /* Return cached token if still valid (60s buffer) */
+  // return cached token if still valid
   if (accessToken && tokenExpiry > now + 60) {
     return accessToken;
   }
@@ -38,8 +28,8 @@ export async function getAuthToken(): Promise<string> {
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Auth failed (HTTP ${response.status}): ${errorBody}`);
+    const body = await response.text();
+    throw new Error(`Auth failed (HTTP ${response.status}): ${body}`);
   }
 
   const data = (await response.json()) as { access_token: string; expires_in: number };

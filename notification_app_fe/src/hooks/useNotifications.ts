@@ -1,6 +1,4 @@
-/**
- * Custom hook for fetching notifications with auto-refresh.
- */
+// Hook for fetching notifications with auto-refresh every 30 seconds
 
 "use client";
 
@@ -9,8 +7,7 @@ import { fetchNotifications } from "@/lib/api";
 import { Log } from "@/lib/logger";
 import { Notification, NotificationType } from "@/lib/types";
 
-/** Auto-refresh interval in milliseconds (30 seconds) */
-const REFRESH_INTERVAL = 30000;
+const REFRESH_INTERVAL = 30000; // 30 seconds
 
 interface UseNotificationsOptions {
   limit?: number;
@@ -20,21 +17,7 @@ interface UseNotificationsOptions {
   autoRefresh?: boolean;
 }
 
-interface UseNotificationsResult {
-  notifications: Notification[];
-  isLoading: boolean;
-  error: string | null;
-  refetch: () => Promise<void>;
-  lastUpdated: Date | null;
-}
-
-/**
- * Hook for fetching and managing notification data.
- * Supports auto-refresh to poll for new notifications.
- */
-export function useNotifications(
-  options: UseNotificationsOptions = {}
-): UseNotificationsResult {
+export function useNotifications(options: UseNotificationsOptions = {}) {
   const { limit, page, notification_type, autoFetch = true, autoRefresh = true } = options;
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -48,8 +31,6 @@ export function useNotifications(
     setError(null);
 
     try {
-      await Log("info", "hook", `Fetching notifications`);
-
       const params: Record<string, unknown> = {};
       if (limit) params.limit = limit;
       if (page) params.page = page;
@@ -58,36 +39,26 @@ export function useNotifications(
       const data = await fetchNotifications(params as Parameters<typeof fetchNotifications>[0]);
       setNotifications(data);
       setLastUpdated(new Date());
-
-      await Log("info", "hook", `Fetched ${data.length} notifications`);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      setError(message);
-      await Log("error", "hook", `Fetch failed: ${message.slice(0, 30)}`);
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      setError(msg);
+      await Log("error", "hook", `Fetch failed: ${msg.slice(0, 30)}`);
     } finally {
       setIsLoading(false);
     }
   }, [limit, page, notification_type]);
 
-  /* Initial fetch */
+  // initial fetch
   useEffect(() => {
-    if (autoFetch) {
-      refetch();
-    }
+    if (autoFetch) refetch();
   }, [autoFetch, refetch]);
 
-  /* Auto-refresh every 30 seconds */
+  // auto-refresh on a timer
   useEffect(() => {
     if (!autoRefresh) return;
-
-    intervalRef.current = setInterval(() => {
-      refetch();
-    }, REFRESH_INTERVAL);
-
+    intervalRef.current = setInterval(refetch, REFRESH_INTERVAL);
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [autoRefresh, refetch]);
 

@@ -1,47 +1,22 @@
-/**
- * Type definitions for the Logging Middleware.
- * Enforces strict type-safety for all log parameters
- * as per the evaluation server constraints.
- */
+// Type definitions for the logging middleware
 
-/** Valid stack values — indicates which layer generated the log */
 export type Stack = "backend" | "frontend";
-
-/** Valid log severity levels — ordered by severity */
 export type Level = "info" | "warn" | "error" | "fatal";
 
-/** Packages usable exclusively in backend applications */
+// Backend-only packages
 export type BackendPackage =
-  | "cache"
-  | "controller"
-  | "cron job"
-  | "db"
-  | "domain"
-  | "handler"
-  | "repository"
-  | "route"
-  | "service";
+  | "cache" | "controller" | "cron job" | "db" | "domain"
+  | "handler" | "repository" | "route" | "service";
 
-/** Packages usable exclusively in frontend applications */
+// Frontend-only packages
 export type FrontendPackage =
-  | "api"
-  | "component"
-  | "hook"
-  | "page"
-  | "state"
-  | "style";
+  | "api" | "component" | "hook" | "page" | "state" | "style";
 
-/** Packages usable in both backend and frontend applications */
-export type SharedPackage =
-  | "auth"
-  | "config"
-  | "middleware"
-  | "utils";
+// Shared packages (both backend and frontend)
+export type SharedPackage = "auth" | "config" | "middleware" | "utils";
 
-/** Union of all valid package names */
 export type Package = BackendPackage | FrontendPackage | SharedPackage;
 
-/** Configuration required to initialize the logger */
 export interface LoggerConfig {
   email: string;
   name: string;
@@ -51,13 +26,11 @@ export interface LoggerConfig {
   clientSecret: string;
 }
 
-/** Shape of a successful log API response */
 export interface LogResponse {
   logID: string;
   message: string;
 }
 
-/** Shape of the authentication token response */
 export interface AuthResponse {
   token_type: string;
   access_token: string;

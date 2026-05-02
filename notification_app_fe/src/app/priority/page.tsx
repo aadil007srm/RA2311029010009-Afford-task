@@ -1,6 +1,4 @@
-/**
- * Priority Inbox Page — Top N notifications ranked by importance.
- */
+// Priority Inbox page — top N ranked notifications
 
 "use client";
 
@@ -18,68 +16,51 @@ import { Notification, NotificationType } from "@/lib/types";
 import { Log } from "@/lib/logger";
 
 export default function PriorityPage() {
-  const [activeFilter, setActiveFilter] = useState<NotificationType | "All">("All");
+  const [filter, setFilter] = useState<NotificationType | "All">("All");
   const [topN, setTopN] = useState(10);
   const { isRead, markAsRead } = useReadState();
   const { notifications, isLoading, error, refetch, lastUpdated } = useNotifications();
 
-  useEffect(() => {
-    Log("info", "page", "Priority page loaded");
-  }, []);
+  useEffect(() => { Log("info", "page", "Priority page loaded"); }, []);
 
-  const filtered = useMemo(() => {
-    if (activeFilter === "All") return notifications;
-    return notifications.filter((n: Notification) => n.Type === activeFilter);
-  }, [notifications, activeFilter]);
+  const filtered = useMemo(() =>
+    filter === "All" ? notifications : notifications.filter((n: Notification) => n.Type === filter),
+    [notifications, filter]
+  );
 
-  const priorityNotifications = useMemo(() => {
-    return getTopNNotifications(filtered, topN);
-  }, [filtered, topN]);
+  const prioritized = useMemo(() => getTopNNotifications(filtered, topN), [filtered, topN]);
 
   return (
-    <Box sx={{ maxWidth: 700, mx: "auto", py: 2 }}>
-      {/* Header */}
-      <Box sx={{ mb: 2 }}>
+    <Box sx={{ maxWidth: 680, mx: "auto", py: 2 }}>
+      <Box sx={{ mb: 2.5 }}>
         <Typography variant="h4">Priority Inbox</Typography>
         <Typography variant="body2">
-          Top {topN} by weight + recency · Auto-refreshes every 30s
-          {lastUpdated && ` · Updated ${lastUpdated.toLocaleTimeString()}`}
+          Top {topN} by importance
+          {lastUpdated ? ` · Updated ${lastUpdated.toLocaleTimeString()}` : ""} · Auto-refreshes every 30s
         </Typography>
       </Box>
 
       <FilterBar
-        activeFilter={activeFilter}
-        onFilterChange={(f) => { setActiveFilter(f); Log("info", "page", `Filter: ${f}`); }}
-        totalCount={priorityNotifications.length}
+        activeFilter={filter}
+        onFilterChange={(f) => setFilter(f)}
+        totalCount={prioritized.length}
         onRefresh={refetch}
         isLoading={isLoading}
         topN={topN}
-        onTopNChange={(n) => { setTopN(n); Log("info", "page", `Top N: ${n}`); }}
+        onTopNChange={setTopN}
       />
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2, fontSize: "0.8rem" }}>
-          {error}
-        </Alert>
-      )}
+      {error && <Alert severity="error" sx={{ mb: 2, fontSize: "0.8rem" }}>{error}</Alert>}
 
       {isLoading ? (
-        Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} variant="rounded" height={60} sx={{ mb: 1, borderRadius: 2 }} />
-        ))
-      ) : priorityNotifications.length === 0 ? (
-        <Box sx={{ textAlign: "center", py: 6, color: "#94A3B8" }}>
-          <Typography sx={{ fontSize: "0.875rem" }}>No notifications to display</Typography>
+        Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} variant="rounded" height={48} sx={{ mb: 0.75, borderRadius: 2, bgcolor: "#2C2C2E" }} />)
+      ) : prioritized.length === 0 ? (
+        <Box sx={{ textAlign: "center", py: 8, color: "#666" }}>
+          <Typography sx={{ fontSize: "0.85rem" }}>No notifications to display</Typography>
         </Box>
       ) : (
-        priorityNotifications.map((n: Notification, i: number) => (
-          <NotificationCard
-            key={n.ID}
-            notification={n}
-            isRead={isRead(n.ID)}
-            onMarkRead={markAsRead}
-            rank={i + 1}
-          />
+        prioritized.map((n: Notification, i: number) => (
+          <NotificationCard key={n.ID} notification={n} isRead={isRead(n.ID)} onMarkRead={markAsRead} rank={i + 1} />
         ))
       )}
     </Box>

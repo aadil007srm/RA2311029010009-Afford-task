@@ -1,14 +1,8 @@
-/**
- * Frontend configuration.
- * Uses the Next.js rewrite proxy to avoid browser CORS issues.
- * All API calls go through /api/proxy/* which forwards to the evaluation server.
- */
+// Frontend config — reads from env vars set in .env file
+// Next.js auto-loads .env, but client-side vars need the NEXT_PUBLIC_ prefix
 
 export const CONFIG = {
-  /** Proxied base URL — Next.js rewrites this to the evaluation server */
-  BASE_URL: "/api/proxy",
-
-  /** Registered credentials from .env */
+  BASE_URL: "/api/proxy", // proxied through next.config.ts to avoid CORS
   email: process.env.NEXT_PUBLIC_EMAIL || "",
   name: process.env.NEXT_PUBLIC_NAME || "",
   rollNo: process.env.NEXT_PUBLIC_ROLL_NO || "",

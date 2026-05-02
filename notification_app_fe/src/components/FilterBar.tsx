@@ -1,6 +1,4 @@
-/**
- * FilterBar — Simple, clean controls for filtering notifications.
- */
+// Filter bar with yellow active state
 
 "use client";
 
@@ -9,16 +7,15 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { NotificationType } from "@/lib/types";
 
-interface FilterBarProps {
+interface Props {
   activeFilter: NotificationType | "All";
-  onFilterChange: (filter: NotificationType | "All") => void;
+  onFilterChange: (f: NotificationType | "All") => void;
   totalCount: number;
   onRefresh: () => void;
   isLoading: boolean;
@@ -26,83 +23,46 @@ interface FilterBarProps {
   onTopNChange?: (n: number) => void;
 }
 
-const filters: Array<{ value: NotificationType | "All"; label: string }> = [
-  { value: "All", label: "All" },
-  { value: "Placement", label: "Placement" },
-  { value: "Result", label: "Result" },
-  { value: "Event", label: "Event" },
-];
+const filters: (NotificationType | "All")[] = ["All", "Placement", "Result", "Event"];
 
-const topNOptions = [5, 10, 15, 20];
-
-export default function FilterBar({
-  activeFilter,
-  onFilterChange,
-  totalCount,
-  onRefresh,
-  isLoading,
-  topN,
-  onTopNChange,
-}: FilterBarProps) {
+export default function FilterBar({ activeFilter, onFilterChange, totalCount, onRefresh, isLoading, topN, onTopNChange }: Props) {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        alignItems: { xs: "stretch", sm: "center" },
-        justifyContent: "space-between",
-        gap: 1.5,
-        mb: 2,
-      }}
-    >
-      {/* Filter chips */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, alignItems: "center" }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 1.5, mb: 2.5 }}>
+      <Box sx={{ display: "flex", gap: 0.5 }}>
         {filters.map((f) => (
           <Chip
-            key={f.value}
-            label={f.label}
+            key={f}
+            label={f}
             clickable
-            onClick={() => onFilterChange(f.value)}
             size="small"
+            onClick={() => onFilterChange(f)}
             sx={{
-              backgroundColor: activeFilter === f.value ? "#1E293B" : "#F1F5F9",
-              color: activeFilter === f.value ? "#FFF" : "#64748B",
-              fontWeight: 500,
-              "&:hover": {
-                backgroundColor: activeFilter === f.value ? "#334155" : "#E2E8F0",
-              },
+              backgroundColor: activeFilter === f ? "#F7DF1E" : "#3A3A3C",
+              color: activeFilter === f ? "#1A1A1D" : "#8B8B8B",
+              fontWeight: activeFilter === f ? 600 : 400,
+              "&:hover": { backgroundColor: activeFilter === f ? "#F7DF1E" : "#4A4A4C" },
             }}
           />
         ))}
       </Box>
 
-      {/* Right controls */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         {topN !== undefined && onTopNChange && (
-          <FormControl size="small" sx={{ minWidth: 90 }}>
-            <InputLabel id="topn-label" sx={{ fontSize: "0.8rem" }}>Top N</InputLabel>
+          <FormControl size="small">
             <Select
-              labelId="topn-label"
               value={topN}
-              label="Top N"
               onChange={(e: SelectChangeEvent<number>) => onTopNChange(Number(e.target.value))}
-              sx={{ fontSize: "0.8rem", height: 32 }}
+              sx={{ fontSize: "0.78rem", height: 30, color: "#E8E6E3", "& .MuiOutlinedInput-notchedOutline": { borderColor: "#3A3A3C" } }}
             >
-              {topNOptions.map((n) => (
-                <MenuItem key={n} value={n} sx={{ fontSize: "0.8rem" }}>
-                  {n}
-                </MenuItem>
-              ))}
+              {[5, 10, 15, 20].map((n) => <MenuItem key={n} value={n} sx={{ fontSize: "0.78rem" }}>Top {n}</MenuItem>)}
             </Select>
           </FormControl>
         )}
 
-        <Typography sx={{ fontSize: "0.75rem", color: "#94A3B8" }}>
-          {totalCount} items
-        </Typography>
+        <Typography sx={{ fontSize: "0.72rem", color: "#666" }}>{totalCount} items</Typography>
 
-        <IconButton size="small" onClick={onRefresh} disabled={isLoading} sx={{ color: "#64748B" }}>
-          <RefreshIcon fontSize="small" />
+        <IconButton size="small" onClick={onRefresh} disabled={isLoading} sx={{ color: "#8B8B8B", "&:hover": { color: "#F7DF1E" } }}>
+          <RefreshIcon sx={{ fontSize: 18 }} />
         </IconButton>
       </Box>
     </Box>
