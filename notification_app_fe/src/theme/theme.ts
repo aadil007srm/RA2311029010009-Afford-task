@@ -1,6 +1,5 @@
 /**
- * Material UI Theme configuration for Campus Notifications.
- * Uses a dark theme with vibrant accent colors for notification types.
+ * Material UI Theme — Clean, professional light theme.
  */
 
 "use client";
@@ -9,98 +8,68 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
-      main: "#7C4DFF",
-      light: "#B47CFF",
-      dark: "#3F1DCB",
+      main: "#2563EB",
+      light: "#3B82F6",
+      dark: "#1D4ED8",
     },
     secondary: {
-      main: "#00E5FF",
-      light: "#6EFFFF",
-      dark: "#00B2CC",
+      main: "#64748B",
     },
     background: {
-      default: "#0A0E17",
-      paper: "#111827",
-    },
-    success: {
-      main: "#4CAF50", /* Placement */
-    },
-    info: {
-      main: "#2196F3", /* Result */
-    },
-    warning: {
-      main: "#FF9800", /* Event */
+      default: "#F8F9FA",
+      paper: "#FFFFFF",
     },
     text: {
-      primary: "#E8EAED",
-      secondary: "#9AA0A6",
+      primary: "#1E293B",
+      secondary: "#64748B",
     },
-    divider: "rgba(255,255,255,0.08)",
+    divider: "#E2E8F0",
+    success: { main: "#16A34A" },
+    info: { main: "#2563EB" },
+    warning: { main: "#D97706" },
+    error: { main: "#DC2626" },
   },
   typography: {
-    fontFamily: "'Inter', 'Roboto', 'Helvetica Neue', sans-serif",
-    h4: {
-      fontWeight: 700,
-      letterSpacing: "-0.02em",
-    },
-    h5: {
-      fontWeight: 600,
-      letterSpacing: "-0.01em",
-    },
-    h6: {
-      fontWeight: 600,
-    },
-    body1: {
-      fontSize: "0.95rem",
-    },
-    body2: {
-      fontSize: "0.85rem",
-    },
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    h4: { fontWeight: 700, fontSize: "1.5rem", color: "#1E293B" },
+    h5: { fontWeight: 600, fontSize: "1.25rem" },
+    h6: { fontWeight: 600, fontSize: "1rem" },
+    body1: { fontSize: "0.875rem", color: "#334155" },
+    body2: { fontSize: "0.8rem", color: "#64748B" },
   },
-  shape: {
-    borderRadius: 12,
-  },
+  shape: { borderRadius: 10 },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundImage: "none",
-          border: "1px solid rgba(255,255,255,0.06)",
-          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+          border: "1px solid #E2E8F0",
+          transition: "box-shadow 0.2s ease",
           "&:hover": {
-            borderColor: "rgba(124, 77, 255, 0.3)",
-            boxShadow: "0 8px 32px rgba(124, 77, 255, 0.15)",
-            transform: "translateY(-2px)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           },
         },
       },
     },
     MuiChip: {
       styleOverrides: {
-        root: {
-          fontWeight: 600,
-          letterSpacing: "0.02em",
-        },
+        root: { fontWeight: 500, fontSize: "0.75rem" },
       },
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          textTransform: "none",
-          fontWeight: 600,
-          borderRadius: 8,
-        },
+        root: { textTransform: "none", fontWeight: 500, borderRadius: 8 },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundImage: "none",
-          backgroundColor: "rgba(10, 14, 23, 0.85)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backgroundColor: "#FFFFFF",
+          color: "#1E293B",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+          borderBottom: "1px solid #E2E8F0",
         },
       },
     },

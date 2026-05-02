@@ -1,6 +1,5 @@
 /**
- * Navbar component — Persistent navigation bar with glassmorphism effect.
- * Provides navigation between All Notifications and Priority Inbox pages.
+ * Navbar — Clean, minimal top navigation.
  */
 
 "use client";
@@ -20,71 +19,48 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import HomeIcon from "@mui/icons-material/Home";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 const navItems = [
-  { label: "All Notifications", href: "/notifications", icon: <NotificationsActiveIcon fontSize="small" /> },
-  { label: "Priority Inbox", href: "/priority", icon: <PriorityHighIcon fontSize="small" /> },
+  { label: "All Notifications", href: "/notifications" },
+  { label: "Priority Inbox", href: "/priority" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
   return (
     <>
       <AppBar position="fixed" elevation={0}>
-        <Toolbar sx={{ maxWidth: 1200, width: "100%", mx: "auto", px: { xs: 2, md: 3 } }}>
-          {/* Mobile menu button */}
+        <Toolbar sx={{ maxWidth: 900, width: "100%", mx: "auto", px: { xs: 2, md: 3 } }}>
           <IconButton
             color="inherit"
             edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: "none" } }}
-            aria-label="open navigation menu"
+            onClick={() => setMobileOpen(true)}
+            sx={{ mr: 1, display: { md: "none" } }}
+            aria-label="menu"
           >
             <MenuIcon />
           </IconButton>
 
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 8 }}>
-            <HomeIcon sx={{ color: "#7C4DFF" }} />
-            <Typography
-              variant="h6"
-              sx={{
-                background: "linear-gradient(135deg, #7C4DFF 0%, #00E5FF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-              }}
-            >
+          <Link href="/" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 6 }}>
+            <NotificationsNoneIcon sx={{ color: "#2563EB", fontSize: 22 }} />
+            <Typography variant="h6" sx={{ color: "#1E293B", fontWeight: 700, fontSize: "1rem" }}>
               CampusNotify
             </Typography>
           </Link>
 
-          {/* Desktop navigation */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, ml: "auto", gap: 1 }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, ml: "auto", gap: 0.5 }}>
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
                 <Button
-                  startIcon={item.icon}
+                  size="small"
                   sx={{
-                    color: pathname === item.href ? "#7C4DFF" : "#9AA0A6",
-                    borderBottom: pathname === item.href ? "2px solid #7C4DFF" : "2px solid transparent",
-                    borderRadius: 0,
-                    px: 2,
-                    py: 1,
-                    "&:hover": {
-                      color: "#E8EAED",
-                      backgroundColor: "rgba(124, 77, 255, 0.08)",
-                    },
+                    color: pathname === item.href ? "#2563EB" : "#64748B",
+                    fontWeight: pathname === item.href ? 600 : 400,
+                    fontSize: "0.85rem",
+                    "&:hover": { backgroundColor: "#F1F5F9" },
                   }}
                 >
                   {item.label}
@@ -95,48 +71,32 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile drawer */}
       <Drawer
-        variant="temporary"
         open={mobileOpen}
-        onClose={handleDrawerToggle}
+        onClose={() => setMobileOpen(false)}
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: "block", md: "none" },
-          "& .MuiDrawer-paper": {
-            width: 260,
-            backgroundColor: "#111827",
-            borderRight: "1px solid rgba(255,255,255,0.06)",
-          },
+          "& .MuiDrawer-paper": { width: 240, backgroundColor: "#FFF" },
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
-            sx={{
-              background: "linear-gradient(135deg, #7C4DFF 0%, #00E5FF 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontWeight: 800,
-              mb: 2,
-            }}
-          >
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: "#1E293B" }}>
             CampusNotify
           </Typography>
           <List>
             {navItems.map((item) => (
               <ListItem key={item.href} disablePadding>
-                <Link href={item.href} style={{ textDecoration: "none", width: "100%" }} onClick={handleDrawerToggle}>
+                <Link href={item.href} style={{ textDecoration: "none", width: "100%" }} onClick={() => setMobileOpen(false)}>
                   <ListItemButton
                     sx={{
                       borderRadius: 2,
                       mb: 0.5,
-                      backgroundColor: pathname === item.href ? "rgba(124, 77, 255, 0.15)" : "transparent",
-                      color: pathname === item.href ? "#7C4DFF" : "#9AA0A6",
+                      backgroundColor: pathname === item.href ? "#EFF6FF" : "transparent",
+                      color: pathname === item.href ? "#2563EB" : "#64748B",
                     }}
                   >
-                    <Box sx={{ mr: 2 }}>{item.icon}</Box>
-                    <ListItemText primary={item.label} />
+                    <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontSize: "0.875rem" } } }} />
                   </ListItemButton>
                 </Link>
               </ListItem>
@@ -145,7 +105,6 @@ export default function Navbar() {
         </Box>
       </Drawer>
 
-      {/* Toolbar spacer */}
       <Toolbar />
     </>
   );

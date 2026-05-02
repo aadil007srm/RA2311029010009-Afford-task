@@ -1,6 +1,5 @@
 /**
- * FilterBar — Controls for filtering and configuring notification display.
- * Includes type filter chips, top-N selector, and notification counters.
+ * FilterBar — Simple, clean controls for filtering notifications.
  */
 
 "use client";
@@ -13,13 +12,9 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import WorkIcon from "@mui/icons-material/Work";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import CelebrationIcon from "@mui/icons-material/Celebration";
-import AllInboxIcon from "@mui/icons-material/AllInbox";
-import { NotificationType, TYPE_COLORS } from "@/lib/types";
+import { NotificationType } from "@/lib/types";
 
 interface FilterBarProps {
   activeFilter: NotificationType | "All";
@@ -27,19 +22,18 @@ interface FilterBarProps {
   totalCount: number;
   onRefresh: () => void;
   isLoading: boolean;
-  /** Only shown on the priority page */
   topN?: number;
   onTopNChange?: (n: number) => void;
 }
 
-const filterOptions: Array<{ value: NotificationType | "All"; label: string; icon: React.ReactNode; color: string }> = [
-  { value: "All", label: "All", icon: <AllInboxIcon fontSize="small" />, color: "#7C4DFF" },
-  { value: "Placement", label: "Placement", icon: <WorkIcon fontSize="small" />, color: TYPE_COLORS.Placement },
-  { value: "Result", label: "Result", icon: <AssessmentIcon fontSize="small" />, color: TYPE_COLORS.Result },
-  { value: "Event", label: "Event", icon: <CelebrationIcon fontSize="small" />, color: TYPE_COLORS.Event },
+const filters: Array<{ value: NotificationType | "All"; label: string }> = [
+  { value: "All", label: "All" },
+  { value: "Placement", label: "Placement" },
+  { value: "Result", label: "Result" },
+  { value: "Event", label: "Event" },
 ];
 
-const topNOptions = [5, 10, 15, 20, 25];
+const topNOptions = [5, 10, 15, 20];
 
 export default function FilterBar({
   activeFilter,
@@ -50,10 +44,6 @@ export default function FilterBar({
   topN,
   onTopNChange,
 }: FilterBarProps) {
-  const handleTopNChange = (event: SelectChangeEvent<number>) => {
-    onTopNChange?.(Number(event.target.value));
-  };
-
   return (
     <Box
       sx={{
@@ -61,103 +51,59 @@ export default function FilterBar({
         flexDirection: { xs: "column", sm: "row" },
         alignItems: { xs: "stretch", sm: "center" },
         justifyContent: "space-between",
-        gap: 2,
-        p: 2,
-        borderRadius: 3,
-        backgroundColor: "rgba(17, 24, 39, 0.6)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        mb: 3,
+        gap: 1.5,
+        mb: 2,
       }}
     >
       {/* Filter chips */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, alignItems: "center" }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
-          Filter:
-        </Typography>
-        {filterOptions.map((opt) => (
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, alignItems: "center" }}>
+        {filters.map((f) => (
           <Chip
-            key={opt.value}
-            icon={opt.icon as React.ReactElement}
-            label={opt.label}
+            key={f.value}
+            label={f.label}
             clickable
-            onClick={() => onFilterChange(opt.value)}
-            variant={activeFilter === opt.value ? "filled" : "outlined"}
+            onClick={() => onFilterChange(f.value)}
+            size="small"
             sx={{
-              backgroundColor: activeFilter === opt.value ? `${opt.color}22` : "transparent",
-              color: activeFilter === opt.value ? opt.color : "#9AA0A6",
-              borderColor: activeFilter === opt.value ? opt.color : "rgba(255,255,255,0.12)",
-              "& .MuiChip-icon": {
-                color: activeFilter === opt.value ? opt.color : "#9AA0A6",
-              },
+              backgroundColor: activeFilter === f.value ? "#1E293B" : "#F1F5F9",
+              color: activeFilter === f.value ? "#FFF" : "#64748B",
+              fontWeight: 500,
               "&:hover": {
-                backgroundColor: `${opt.color}15`,
+                backgroundColor: activeFilter === f.value ? "#334155" : "#E2E8F0",
               },
             }}
           />
         ))}
       </Box>
 
-      {/* Right side: Top N selector + counter + refresh */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-        {/* Top-N selector (only on priority page) */}
+      {/* Right controls */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         {topN !== undefined && onTopNChange && (
-          <FormControl size="small" sx={{ minWidth: 100 }}>
-            <InputLabel
-              id="top-n-label"
-              sx={{ color: "#9AA0A6" }}
-            >
-              Top N
-            </InputLabel>
+          <FormControl size="small" sx={{ minWidth: 90 }}>
+            <InputLabel id="topn-label" sx={{ fontSize: "0.8rem" }}>Top N</InputLabel>
             <Select
-              labelId="top-n-label"
-              id="top-n-select"
+              labelId="topn-label"
               value={topN}
               label="Top N"
-              onChange={handleTopNChange}
-              sx={{
-                color: "#E8EAED",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(255,255,255,0.12)",
-                },
-              }}
+              onChange={(e: SelectChangeEvent<number>) => onTopNChange(Number(e.target.value))}
+              sx={{ fontSize: "0.8rem", height: 32 }}
             >
               {topNOptions.map((n) => (
-                <MenuItem key={n} value={n}>
-                  Top {n}
+                <MenuItem key={n} value={n} sx={{ fontSize: "0.8rem" }}>
+                  {n}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         )}
 
-        {/* Count badge */}
-        <Chip
-          label={`${totalCount} notifications`}
-          size="small"
-          sx={{
-            backgroundColor: "rgba(124, 77, 255, 0.12)",
-            color: "#B47CFF",
-          }}
-        />
+        <Typography sx={{ fontSize: "0.75rem", color: "#94A3B8" }}>
+          {totalCount} items
+        </Typography>
 
-        {/* Refresh button */}
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<RefreshIcon />}
-          onClick={onRefresh}
-          disabled={isLoading}
-          sx={{
-            borderColor: "rgba(255,255,255,0.12)",
-            color: "#9AA0A6",
-            "&:hover": {
-              borderColor: "#7C4DFF",
-              color: "#7C4DFF",
-            },
-          }}
-        >
-          Refresh
-        </Button>
+        <IconButton size="small" onClick={onRefresh} disabled={isLoading} sx={{ color: "#64748B" }}>
+          <RefreshIcon fontSize="small" />
+        </IconButton>
       </Box>
     </Box>
   );
