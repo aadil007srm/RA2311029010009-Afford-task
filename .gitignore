@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.next/
+.env
+.env.local
+credentials.json
+*.log
+.DS_Store
+coverage/
